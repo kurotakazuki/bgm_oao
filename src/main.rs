@@ -16,7 +16,6 @@ fn main() -> Result<()> {
         //     "Piano",
         //     "0 0 0 0==0 0.5*cos(X+4*N/S)+0.5",
         // ),
-
         ("bass", "Bass", "0 0 0 x<0 0.45 0 0 0 0<=x 0.55"),
         ("hi_hat", "Hi Hat", "0 0 0 x<0 0.525 0 0 0 0<=x 0.475"),
         ("hi_hat_last", "Hi Hat Last", "0 0 0 0==0 1"),
@@ -180,6 +179,26 @@ fn main() -> Result<()> {
         bubs,
     );
     OaoWriter::create("bgm.oao", oao_metadata)?;
+
+    // 5 secs A440 sine wave
+    let metadata = BubMetadata::new(
+        240_000,
+        1,
+        48000.0,
+        LpcmKind::F32LE,
+        BubSampleKind::default_expr(),
+        "A440 Sine Wave".into(),
+    );
+    let bub_writer = BubWriter::create("a440_sine_wave.bub", metadata)?;
+    let mut bub_frame_writer = unsafe { bub_writer.into_bub_frame_writer::<f32>() };
+    let bub_fns_block = BubFnsBlock::Expr {
+        bub_fns: "0 0 0 0==0 0.5*sin(X+n/S)+0.5".as_bytes(),
+        foot_relative_frame: 240_000,
+        next_head_relative_frame: None,
+        expression: "sin(880*PI*n/S)".as_bytes(),
+        // expression: "sin(2*PI*440*n/S)".as_bytes(),
+    };
+    bub_frame_writer.write_head_to_less_than_next_head_or_ended(bub_fns_block)?;
 
     Ok(())
 }
