@@ -6,6 +6,17 @@ use std::io::Result;
 
 fn main() -> Result<()> {
     let bubs = vec![
+        (
+            "piano",
+            "Piano",
+            "0 0 0 0==0 2/(2*PI)^(1/2)*E^(-(x-n/240000+1)^2/2)",
+        ),
+        // (
+        //     "piano",
+        //     "Piano",
+        //     "0 0 0 0==0 0.5*cos(X+4*N/S)+0.5",
+        // ),
+
         ("bass", "Bass", "0 0 0 x<0 0.45 0 0 0 0<=x 0.55"),
         ("hi_hat", "Hi Hat", "0 0 0 x<0 0.525 0 0 0 0<=x 0.475"),
         ("hi_hat_last", "Hi Hat Last", "0 0 0 0==0 1"),
