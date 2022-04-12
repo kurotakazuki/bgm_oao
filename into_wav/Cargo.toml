@@ -1,5 +1,5 @@
 [package]
-name = "bgm_oao"
+name = "into_wav"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,8 +7,3 @@ edition = "2021"
 
 [dependencies]
 floaout = "0.2.2"
-
-[workspace]
-members = [
-  "into_wav",
-]

@@ -11,22 +11,77 @@ dependencies = [
 
 [[package]]
 name = "floaout"
-version = "0.2.0"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "865b6be9f3ebffe5fdd5f6eb2128cc63c5edfc26586ddac702103641359b9495"
+checksum = "9bbbb7eb5a0debe1a6c1cbd1df2272faefddd6316b32efbadef1f4f105ca3432"
 dependencies = [
  "mpl",
+ "mpl-macro",
  "mycrc",
 ]
 
 [[package]]
-name = "mpl"
+name = "into_wav"
 version = "0.1.0"
+dependencies = [
+ "floaout",
+]
+
+[[package]]
+name = "mpl"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec0916352494ed2edb9375c10236150e2213eeafdeef10e74dfabb18ff42ddfc"
+checksum = "4f5bf88457102919eb498988955620b10fe1c6b28a938afd62a95030fedc391e"
+
+[[package]]
+name = "mpl-macro"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe91d0ec937bef70beab410b77b06dd94b0a8fd8f5eda4dd81e09ecc827a5e48"
+dependencies = [
+ "mpl",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "mycrc"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c3c7ae4c0bfaa74ad78aad42e54688e68e825d0a6346fc36987fbd76888a2b2a"
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.37"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec757218438d5fda206afc041538b2f6d889286160d649a86a24d37e1235afd1"
+dependencies = [
+ "unicode-xid",
+]
+
+[[package]]
+name = "quote"
+version = "1.0.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1feb54ed693b93a84e14094943b84b7c4eae204c512b7ccb95ab0c66d278ad1"
+dependencies = [
+ "proc-macro2",
+]
+
+[[package]]
+name = "syn"
+version = "1.0.91"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b683b2b825c8eef438b77c36a06dc262294da3d5a5813fac20da149241dcd44d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-xid",
+]
+
+[[package]]
+name = "unicode-xid"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3"
