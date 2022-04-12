@@ -44,23 +44,22 @@ const BUBS_DATA: [&[u8]; 35] = [
 ];
 
 fn main() -> Result<()> {
-    //
-    //
+    let mut speakers_absolute_coord = vec![];
     // Floaout into wav
-    let speakers_absolute_coord: &[BubFnsCoord] = &[
-        (-1.0, -1.0, -1.0),
-        (-1.0, -1.0, 1.0),
-        (-1.0, 1.0, -1.0),
-        (-1.0, 1.0, 1.0),
-        (1.0, -1.0, -1.0),
-        (1.0, -1.0, 1.0),
-        (1.0, 1.0, -1.0),
-        (1.0, 1.0, 1.0),
-    ]
-    .map(Into::into);
+    for x in 0..3 {
+        for y in 0..3 {
+            for z in 0..3 {
+                speakers_absolute_coord.push(((x - 1) as f64, (y - 1) as f64, (z - 1) as f64));
+            }
+        }
+    }
+    let speakers_absolute_coord: Vec<BubFnsCoord> = speakers_absolute_coord
+        .into_iter()
+        .map(Into::into)
+        .collect();
     let oao_reader = OaoReader::new(
         include_bytes!("../../output/bgm.oao").as_ref(),
-        speakers_absolute_coord.into(),
+        speakers_absolute_coord.clone(),
     )?;
 
     let frames = oao_reader.metadata.frames();
@@ -70,8 +69,8 @@ fn main() -> Result<()> {
     let bub_frame_readers = BUBS_DATA
         .into_iter()
         .map(|bub| {
-            let bub_reader =
-                BubReader::new(bub, speakers_absolute_coord.into()).expect("valid bubble metadata");
+            let bub_reader = BubReader::new(bub, speakers_absolute_coord.clone())
+                .expect("valid bubble metadata");
             // if bub_reader.metadata.bub_id.rgb == None {
             //     let r = js_sys::Math::random() as f32;
             //     let g = js_sys::Math::random() as f32;
@@ -94,6 +93,31 @@ fn main() -> Result<()> {
     }
 
     for frame in oao_frame_reader {
+        let frame = frame?;
+        for i in 0..wav_len {
+            wav_frame_writers[i].write_frame(vec![frame.0[i]].into())?;
+        }
+    }
+
+    // Solo
+    let bub_reader = BubReader::new(
+        include_bytes!("../../output/stereo_pluck_chord.L.solo.bub").as_ref(),
+        speakers_absolute_coord.clone(),
+    )?;
+    let frames = bub_reader.metadata.frames();
+    let wav_metadata = WavMetadata::new(frames, LpcmKind::F32LE, 1, 48000.0, vec![]);
+
+    let bub_frame_reader = unsafe { bub_reader.into_bub_frame_reader::<f32>(None) };
+    let mut wav_frame_writers = vec![];
+    let wav_len = speakers_absolute_coord.len();
+    for i in 0..wav_len {
+        let (x, y, z) = speakers_absolute_coord[i].into();
+        let wav_writer =
+            WavWriter::create(format!("solo_{}_{}_{}.wav", x, y, z), wav_metadata.clone())?;
+        wav_frame_writers.push(unsafe { wav_writer.into_wav_frame_writer() });
+    }
+
+    for frame in bub_frame_reader {
         let frame = frame?;
         for i in 0..wav_len {
             wav_frame_writers[i].write_frame(vec![frame.0[i]].into())?;

@@ -90,6 +90,12 @@ fn main() -> Result<()> {
             "Xylophone",
             "0 0 0 x<0 0.5*cos(X+2*N/S)+0.5 0 0 0 0<=x 0.5*cos(X-3*N/S)+0.5",
         ),
+        // Solo
+        (
+            "stereo_pluck_chord.L.solo",
+            "Pluck Chord L Solo",
+            "sin(N/S) 0 cos(N/S) 0==0 1.5/(0.5*PI)*E^(-(x^2+y^2)/0.5)",
+        ),
     ];
 
     for bub in bubs {
