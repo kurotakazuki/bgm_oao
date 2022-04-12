@@ -93,7 +93,7 @@ fn main() -> Result<()> {
     ];
 
     for bub in bubs {
-        let wav_reader = WavReader::open(format!("{}.wav", bub.0))?;
+        let wav_reader = WavReader::open(format!("input/{}.wav", bub.0))?;
         let frames = wav_reader.metadata.frames();
         let wav_frame_reader = unsafe { wav_reader.into_wav_frame_reader::<f32>() };
         let metadata = BubMetadata::new(
@@ -116,7 +116,7 @@ fn main() -> Result<()> {
             samples,
         };
         // Write
-        let bub_writer = BubWriter::create(format!("{}.bub", bub.0), metadata)?;
+        let bub_writer = BubWriter::create(format!("output/{}.bub", bub.0), metadata)?;
         let mut bub_frame_writer = unsafe { bub_writer.into_bub_frame_writer::<f32>() };
         bub_frame_writer.write_head_to_less_than_next_head_or_ended(bub_fns_block)?;
     }
@@ -178,27 +178,7 @@ fn main() -> Result<()> {
         String::from("Kazuki Kurota"),
         bubs,
     );
-    OaoWriter::create("bgm.oao", oao_metadata)?;
-
-    // 5 secs A440 sine wave
-    let metadata = BubMetadata::new(
-        240_000,
-        1,
-        48000.0,
-        LpcmKind::F32LE,
-        BubSampleKind::default_expr(),
-        "A440 Sine Wave".into(),
-    );
-    let bub_writer = BubWriter::create("a440_sine_wave.bub", metadata)?;
-    let mut bub_frame_writer = unsafe { bub_writer.into_bub_frame_writer::<f32>() };
-    let bub_fns_block = BubFnsBlock::Expr {
-        bub_fns: "0 0 0 0==0 0.5*sin(X+n/S)+0.5".as_bytes(),
-        foot_relative_frame: 240_000,
-        next_head_relative_frame: None,
-        expression: "sin(880*PI*n/S)".as_bytes(),
-        // expression: "sin(2*PI*440*n/S)".as_bytes(),
-    };
-    bub_frame_writer.write_head_to_less_than_next_head_or_ended(bub_fns_block)?;
+    OaoWriter::create("output/bgm.oao", oao_metadata)?;
 
     Ok(())
 }
